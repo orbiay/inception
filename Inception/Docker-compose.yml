@@ -4,36 +4,29 @@ services:
        wordpress:
               container_name: wordpress
               build: ./wordpress/ 
-              #image: wordpress:php8.2-fpm-alpine
               restart: always
               networks:
-                    - private_net
-              ports:
-                    - "9000:9000"
+                    - inception
               volumes:
                       - wp_data:/var/www/wordpress
               depends_on:
                   - mariadb
        mariadb:
               container_name: mariadb
-              #build: ./requirements/mariadb/ 
-              image: mariadb
+              build: ./mariadb/
               networks:
-                    - private_net
+                    - inception
               restart: always
-              ports:
-                    - "3306:3306"
               environment:
-                MYSQL_ROOT_PASSWORD: root
-                MYSQL_DATABASE: mariadb
-                MYSQL_USER: root
-                MYSQL_PASSWORD: root
+                 MYSQL_ROOT_PASSWORD: root
+                 MYSQL_DATABASE: mariadb
+                 MYSQL_USER: orbiay
+                 MYSQL_PASSWORD: root
        nginx:
               container_name: nginx
               build: ./nginx/ 
-              #image: nginx
               networks:
-                    - private_net
+                    - inception
               restart: unless-stopped
               ports:
                       - "443:443"
@@ -41,9 +34,15 @@ services:
                        - wp_data:/var/www/wordpress
               depends_on:
                   - wordpress
-
 volumes:
-        wp_data:
+  wp_data:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: /Users/orbiay/Desktop/Inception/wp-data
+
 
 networks:
-      private_net:
+  inception:
+    name: inception
