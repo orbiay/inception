@@ -1,0 +1,78 @@
+ [mariadb]
+ bind-address            = 0.0.0.0
+
+    The value "0.0.0.0" is a special IP address that means "listen on all available network interfaces."
+     This is often used when the service needs to be accessible from other machines on the same network or over the internet.
+
+kill $(cat /var/run/mysqld/mysqld.pid)
+
+    The command "$(cat /var/run/mysqld/mysqld.pid)" is used to retrieve the process ID (PID) of the running MySQL  server. 
+     The "cat" command is used to display the contents of the file "/var/run/mysqld/mysqld.pid",
+      which typically contains the PID of the running MySQL server process.
+
+    So in this command, it first retrieves the process ID of the running MySQL server,
+     and then sends a signal to the process with that PID to stop the MySQL server.
+
+
+FLUSH PRIVILEGES;
+
+       FLUSH PRIVILEGES command is used to reload the user's privilege table and make the new changes effective immediately.
+
+[nginx]
+include mime.types;
+
+  The file "mime.types" typically contains a list of file extensions and their corresponding MIME types.
+   MIME types are used to specify the type of content that a file contains,
+    such as "text/html" for HTML files or "image/jpeg" for JPEG images. When a web server receives a request for a file,
+     it uses the file's extension to look up the corresponding MIME type in the mime.types file,
+      and then sends the appropriate MIME type in the HTTP headers of the response.
+
+listen 443 ssl;
+
+The specific syntax "listen 443 ssl;" is commonly used in web server configurations,
+ such as Apache or Nginx. It tells the web server to listen on port 443,
+  which is the default port for HTTPS (HTTP Secure) connections. The "ssl" keyword tells the server to enable SSL/TLS encryption for the connection, 
+  which is necessary for secure HTTPS connections.
+
+When a web server is configured to listen on port 443 with SSL/TLS enabled,
+ it means that the server will listen for incoming connections on port 443 and will encrypt any data that is transmitted over those connections using SSL/TLS.
+  This allows for secure communication between the client and the server and prevents eavesdropping or tampering of the data in transit.
+
+root /var/www/wordpress;
+
+The specific syntax "root /var/www/wordpress;" tells the web server that the root directory for the server is located at "/var/www/wordpress".
+ This means that the web server will look in this directory for files and directories to serve when it receives a request for a specific URL.
+
+For example, if a client requests the URL "https://example.com/index.html",
+ the web server will look in the "/var/www/wordpress" directory for a file named "index.html" and serve that file to the client.
+
+
+location ~ \.php$ {
+                        fastcgi_split_path_info ^(.+\.php)(/.+)$;
+                        fastcgi_pass wordpress:9000;
+                        fastcgi_index index.php;
+                        include fastcgi.conf;
+                        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+                }
+
+ The specific syntax "location ~ .php$ {" is a regular expression that matches any request that ends in ".php".
+  This is typically used to specify how the web server should handle requests for PHP files.
+
+The block of configuration that follows this line specifies how the web server should handle requests that match the regular expression.
+
+In summary, this block of configuration is specifying how the web server should handle requests for PHP files.
+ It's forwarding the requests to a FastCGI server running on the host "wordpress" and listening on port 9000.
+  It's also specifying how the web server should treat requests for directories,
+   and it's setting the SCRIPT_FILENAME parameter which is passed to the PHP interpreter,
+    to the full path of the requested PHP script.
+
+[Docker-compose]
+
+container_name: The name given to the Nginx container.
+build: Specifies the location of the Dockerfile used to build the Nginx image.
+networks: Attaches the Nginx container to a user-defined network named "inception".
+restart: Specifies the restart policy for the container, set to "unless-stopped" which means the container will always restart unless manually stopped.
+ports: Maps the host port 443 to the container port 443, allowing the Nginx service to be accessed via https on port 443.
+volumes: Mounts a named volume "wp_data" at the container path "/var/www/wordpress".
+depends_on: Specifies that the Nginx container should only start once the "wordpress" container is running.
+[wordpress]

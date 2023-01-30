@@ -9,6 +9,8 @@ services:
                     - inception
               volumes:
                       - wp_data:/var/www/wordpress
+              env_file:
+                  - ./.env
               depends_on:
                   - mariadb
        mariadb:
@@ -17,11 +19,13 @@ services:
               networks:
                     - inception
               restart: always
-              environment:
-                 MYSQL_ROOT_PASSWORD: root
-                 MYSQL_DATABASE: mariadb
-                 MYSQL_USER: orbiay
-                 MYSQL_PASSWORD: root
+              env_file:
+                  -  ./.env
+              #environment:
+              #   MYSQL_ROOT_PASSWORD: root
+              #   MYSQL_DATABASE: mariadb
+              #   MYSQL_USER: orbiay
+              #   MYSQL_PASSWORD: root
        nginx:
               container_name: nginx
               build: ./nginx/ 
