@@ -21,6 +21,8 @@ services:
               restart: always
               env_file:
                   -  ./.env
+              volumes:
+                      - base_data:/var/lib/mysql
               #environment:
               #   MYSQL_ROOT_PASSWORD: root
               #   MYSQL_DATABASE: mariadb
@@ -46,6 +48,12 @@ volumes:
       type: none
       device: /Users/orbiay/Desktop/Inception/wp-data
 
+  base_data:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: /Users/orbiay/Desktop/Inception/base-data
 
 networks:
   inception:
